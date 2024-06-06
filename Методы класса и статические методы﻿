@@ -1,0 +1,88 @@
+Задача 1
+import functools
+
+def upper_print(obj):
+    """
+    Print the given object in upper case.
+    
+    This function is a decorator for the builtin 'print' function.
+    """
+    print(obj, end='')
+
+original_print = print
+print = functools.partialmethod(upper_print, None)
+# Ваш код
+
+print('Нельзя ли потише?')
+
+
+Задача 2
+import getpass
+
+def check_password(func):
+    def wrapper( * args,  *  * kwargs):
+        password = getpass.getpass('Введите пароль: ')
+        if password != 'правильный_пароль':
+            print('В доступе отказано')
+            return None
+        return func( * args,  *  * kwargs)
+    return wrapper
+
+@check_password
+def fibonacci(n):
+    """Вычисление n-го числа Фибоначчи."""
+    a, b = 0, 1
+    for _ in range(n):
+        a, b = b, a + b
+    return a
+print(fibonacci(10))  
+
+
+Задача 3
+import functools
+
+def check_password(password):
+    def decorator(func):
+        @functools.wraps(func)
+        def wrapper( * args,  *  * kwargs):
+            user_input = input("Введите пароль: ")
+            if user_input == password:
+                return func( * args,  *  * kwargs)
+            else:
+                print("Неверный пароль.")
+                return None
+        return wrapper
+    return decorator
+
+@check_password('password')
+def make_burger(typeOfMeat, withOnion=False, withTomato=True):
+    print("Приготовление бургера...")
+    print("Бургер готов!")
+
+make_burger('курица', True, False)
+
+Задача 4
+def cached(func):
+    cache = {}
+
+    def wrapper( * args):
+        if args in cache:
+            return cache[args]
+        result = func( * args)
+        cache[args] = result
+        return result
+
+    return wrapper
+
+@cached
+def fib(n):
+    if n == 1 or n == 2:
+        return 1
+    else:
+        return fib(n - 1) + fib(n - 2)
+
+print(fib(3)) 
+print(fib(4))  
+print(fib(3))  
+
+
