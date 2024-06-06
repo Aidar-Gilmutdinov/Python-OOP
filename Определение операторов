@@ -1,0 +1,276 @@
+Задача1
+class FoodInfo:
+    def __init__(self, proteins, fats, carbohydrates):
+        self.proteins = proteins
+        self.fats = fats
+        self.carbohydrates = carbohydrates
+
+    def get_proteins(self):
+        return self.proteins
+
+    def get_fats(self):
+        return self.fats
+
+    def get_carbohydrates(self):
+        return self.carbohydrates
+
+    def get_kcalories(self):
+        return 4  *  self.proteins + 9  *  self.fats + 4  *  self.carbohydrates
+
+    def __add__(self, other):
+        return FoodInfo(
+            self.proteins + other.proteins,
+            self.fats + other.fats,
+            self.carbohydrates + other.carbohydrates
+        )
+# Ваш код
+
+food1 = FoodInfo(100, 100, 100)
+food2 = FoodInfo(50, 60, 70)
+food3 = food1 + food2
+print(food1.get_proteins(), food1.get_fats(),
+      food1.get_carbohydrates(), food1.get_kcalories())
+print(food2.get_proteins(), food2.get_fats(),
+      food2.get_carbohydrates(), food2.get_kcalories())
+print(food3.get_proteins(), food3.get_fats(),
+      food3.get_carbohydrates(), food3.get_kcalories())
+Задача2
+class ReversedList:
+    def __init__(self, lst):
+        self._list = lst[::-1]
+
+    def __len__(self):
+        return len(self._list)  
+
+    def __getitem__(self, index):
+        return self._list[index] 
+
+# Ваш код
+
+rl = ReversedList([10, 20, 30])
+for i in range(len(rl)):
+    print(rl[i])
+
+Задача3
+class SquareFunction:
+    def __init__(self, a, b, c):
+        self.a = a
+        self.b = b
+        self.c = c
+
+    def __call__(self, x):
+        return self.a  *  x *  * 2 + self.b  *  x + self.c
+
+# Ваш код
+
+sf = SquareFunction(1, 0, 0)
+print(sf(-2))
+print(sf(-1))
+print(sf(-0))
+print(sf(1))
+print(sf(2))
+print(sf(10))
+
+Задача4
+class Date:
+    def __init__(self, month, day):
+        self.month = month
+        self.day = day
+
+    def __sub__(self, other):
+        # Проверяем, что месяцы и дни не выходят за пределы одного и того же года
+        if self.month < 1 or self.month > 12 or other.month < 1 or other.month > 12:
+            raise ValueError("Month must be between 1 and 12")
+        if self.day < 1 or self.day > 31 or other.day < 1 or other.day > 31:
+            raise ValueError("Day must be between 1 and 31")
+
+        days_in_month = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
+        days_difference = 0
+        for month in range(self.month - 1, other.month - 1, -1):
+            days_difference += days_in_month[month]
+        days_difference -= other.day - 1
+        return days_difference
+
+# Ваш код
+
+jan5 = Date(1, 5)
+jan1 = Date(1, 1)
+
+print(jan5 - jan1)
+print(jan1 - jan5)
+print(jan1 - jan1)
+print(jan5 - jan5)
+
+Задача5
+class Point:
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+
+    def __eq__(self, other):
+        return self.x == other.x and self.y == other.y
+
+    def __ne__(self, other):
+        return not self == other
+
+# Ваш код
+
+p1 = Point(1, 2)
+p2 = Point(5, 6)
+
+if p1 == p2:
+    print("Equal True")
+else:
+    print("Equal False")
+
+if p1 != p2:
+    print("Not equal True")
+else:
+    print("Not equal False")
+
+Задача6
+class SparseArray:
+    def __init__(self):
+        self.data = {}
+
+    def __setitem__(self, key, value):
+        if value != 0:
+            self.data[key] = value
+
+    def __getitem__(self, key):
+        return self.data.get(key, 0)
+
+    def __contains__(self, key):
+        return key in self.data
+
+    def __len__(self):
+        return len(self.data)
+# Ваш код
+
+arr = SparseArray()
+arr[1] = 10
+arr[8] = 20
+for i in range(10):
+    print('arr[{}] = {}'.format(i, arr[i]))
+
+Задача7
+class Polynomial:
+    def __init__(self, coefficients):
+        self.coefficients = coefficients
+
+    def __call__(self, x):
+        y = 0
+        for power, coeff in enumerate(self.coefficients):
+            y += coeff  *  (x  *  *  power)
+        return y
+
+    def __add__(self, other):
+        if len(self.coefficients) > len(other.coefficients):
+            return self.__add__(other.__extend__(0))
+        else:
+            return self.__add__(other.__extend__(0))
+
+    def __extend__(self, other):
+        if len(self.coefficients) == len(other.coefficients):
+            return self.coefficients
+        else:
+            return self.coefficients + [0]  *  (len(other.coefficients) - len(self.coefficients))
+
+# Ваш код
+
+poly = Polynomial([10, -1])
+print(poly(0))
+print(poly(1))
+print(poly(2))
+
+Задача8
+class Queue:
+    def __init__(self,  * values):
+        self._queue = list(values)
+
+    def append(self,  * values):
+        self._queue.extend(values)
+
+    def copy(self):
+        return Queue(self._queue[:])
+
+    def pop(self):
+        if self._queue:
+            return self._queue.pop(0)
+        return None
+
+    def extend(self, queue):
+        self._queue.extend(queue._queue)
+
+    def next(self):
+        if self._queue:
+            return Queue(self._queue[1:])
+        return None
+
+    def __add__(self, queue):
+        return Queue(self._queue + queue._queue)
+
+    def __iadd__(self, queue):
+        self._queue += queue._queue
+        return self
+
+    def __eq__(self, queue):
+        return self._queue == queue._queue
+
+    def __repr__(self):
+        return f"Queue({self._queue!r})" if self._queue else "Queue()"
+
+    def __str__(self):
+        return f"[{', '.join(map(str, self._queue))}]" if self._queue else "[]"
+
+    def __iter__(self):
+        return iter(self._queue)
+
+    def __next__(self):
+        return next(iter(self._queue))
+
+    def __getitem__(self, index):
+        return self._queue[index]
+
+    def __len__(self):
+        return len(self._queue)
+
+    def __bool__(self):
+        return bool(self._queue)
+
+    def __delitem__(self, index):
+        del self._queue[index]
+
+    def __setitem__(self, index, value):
+        self._queue[index] = value
+
+    def __contains__(self, item):
+        return item in self._queue
+
+    def __rshift__(self, N):
+        if N > len(self._queue):
+            return Queue()
+        return Queue(self._queue[N:])
+# Ваш код
+
+q1 = Queue(1, 2, 3)
+print(q1)
+q1.append(4, 5)
+print(q1)
+qx = q1.copy()
+print(qx.pop())
+print(qx)
+q2 = q1.copy()
+print(q2)
+print(q1 == q2, id(q1) == id(q2))
+q3 = q2.next()
+print(q1, q2, q3, sep = '\n')
+print(q1 + q3)
+q3.extend(Queue(1, 2))
+print(q3)
+q4 = Queue(1, 2)
+q4 += q3 >> 4
+print(q4)
+q5 = next(q4)
+print(q4)
+print(q5)
