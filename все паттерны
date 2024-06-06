@@ -1,0 +1,426 @@
+Фабричный метод.
+class Animal:
+    def make_sound(self):
+        raise NotImplementedError("Подклассы должны реализовать этот метод")
+
+class Lion(Animal):
+    def make_sound(self):
+        return "Рычание!"
+
+class Monkey(Animal):
+    def make_sound(self):
+        return "Визг!"
+
+class Elephant(Animal):
+    def make_sound(self):
+        return "Трубление!"
+
+class AnimalFactory:
+    def create_animal(self):
+        raise NotImplementedError("Подклассы должны реализовать этот метод")
+
+class LionFactory(AnimalFactory):
+    def create_animal(self):
+        return Lion()
+
+class MonkeyFactory(AnimalFactory):
+    def create_animal(self):
+        return Monkey()
+
+class ElephantFactory(AnimalFactory):
+    def create_animal(self):
+        return Elephant()
+
+def interact_with_animal(factory: AnimalFactory):
+    animal = factory.create_animal()
+    print("Звук:", animal.make_sound())
+
+lion_factory = LionFactory()
+monkey_factory = MonkeyFactory()
+elephant_factory = ElephantFactory()
+
+interact_with_animal(lion_factory)     # Вывод: Звук: Рычание!
+interact_with_animal(monkey_factory)   # Вывод: Звук: Визг!
+interact_with_animal(elephant_factory) # Вывод: Звук: Трубление!
+Абстрактная фабрика
+from abc import ABC, abstractmethod
+
+class CarFactory(ABC):
+    @abstractmethod
+    def produce_car(self):
+        pass
+class ElectricCarFactory(CarFactory):
+    def produce_car(self):
+        return ElectricCar()
+
+class PetrolCarFactory(CarFactory):
+    def produce_car(self):
+        return PetrolCar()
+
+class HybridCarFactory(CarFactory):
+    def produce_car(self):
+        return HybridCar()
+class Car():
+    def drive(self):
+        print(f"Driving a {self.__class__.__name__} car.")
+
+class ElectricCar(Car):
+    pass
+
+class PetrolCar(Car):
+    pass
+
+class HybridCar(Car):
+    pass
+electric_factory = ElectricCarFactory()
+petrol_factory = PetrolCarFactory()
+hybrid_factory = HybridCarFactory()
+
+electric_car = electric_factory.produce_car()
+petrol_car = petrol_factory.produce_car()
+hybrid_car = hybrid_factory.produce_car()
+
+electric_car.drive()
+petrol_car.drive()
+hybrid_car.drive()
+Строитель
+class Engine:
+    def __init__(self, type, power):
+        self.type = type
+        self.power = power
+
+    def __repr__(self):
+        return f"Engine(type={self.type}, power={self.power})"
+
+class Transmission:
+    def __init__(self, type, gearbox):
+        self.type = type
+        self.gearbox = gearbox
+
+    def __repr__(self):
+        return f"Transmission(type={self.type}, gearbox={self.gearbox})"
+
+class Body:
+    def __init__(self, model, color):
+        self.model = model
+        self.color = color
+
+    def __repr__(self):
+        return f"Body(model={self.model}, color={self.color})"
+
+class Wheels:
+    def __init__(self, size):
+        self.size = size
+
+    def __repr__(self):
+        return f"Wheels(size={self.size})"
+
+class CarBuilder:
+    def __init__(self):
+        self.engine = None
+        self.transmission = None
+        self.body = None
+        self.wheels = None
+
+    def set_engine(self, engine):
+        self.engine = engine
+        return self
+
+    def set_transmission(self, transmission):
+        self.transmission = transmission
+        return self
+
+    def set_body(self, body):
+        self.body = body
+        return self
+
+    def set_wheels(self, wheels):
+        self.wheels = wheels
+        return self
+
+    def build(self):
+        return Car(self.engine, self.transmission, self.body, self.wheels)
+
+class Car:
+    def __init__(self, engine, transmission, body, wheels):
+        self.engine = engine
+        self.transmission = transmission
+        self.body = body
+        self.wheels = wheels
+
+    def __repr__(self):
+        return (f"Car(engine={self.engine}, transmission={self.transmission}, "
+                f"body={self.body}, wheels={self.wheels})")
+
+class CarDirector:
+    def __init__(self, builder):
+        self.builder = builder
+
+    def construct_car(self):
+        sedan_builder = SedanBuilder()
+        self.builder.set_engine(sedan_builder.engine).set_transmission(sedan_builder.transmission).set_body(sedan_builder.body).set_wheels(sedan_builder.wheels)
+        return self.builder.build()
+
+class SedanBuilder:
+    def __init__(self):
+        self.engine = Engine("Gasoline", 150)
+        self.transmission = Transmission("Automatic", 6)
+        self.body = Body("Sedan", "White")
+        self.wheels = Wheels(17)
+
+director = CarDirector(SedanBuilder())
+sedan = director.construct_car()
+print("Создан седан:", sedan)
+Прототип
+class OrderPrototype:
+    def __init__(self):
+        self.order_number = 1001
+        self.products = ["Product A", "Product B", "Product C"]
+        self.total_price = 150.00
+
+    def clone(self):
+        return Order(self.order_number, list(self.products), self.total_price)
+
+class Order:
+    def __init__(self, order_number, products, total_price):
+        self.order_number = order_number
+        self.products = products
+        self.total_price = total_price
+
+prototype_order = OrderPrototype()
+
+order1 = prototype_order.clone()
+order1.order_number = 1002  
+order1.total_price = 200.00 
+
+order2 = prototype_order.clone()
+order2.order_number = 1003  
+order2.products.append("Product D")  
+
+print("Order 1:")
+print("Order Number:", order1.order_number)
+print("Products:", order1.products)
+print("Total Price:", order1.total_price)
+
+print("\nOrder 2:")
+print("Order Number:", order2.order_number)
+print("Products:", order2.products)
+print("Total Price:", order2.total_price)
+Одиночка
+class GameSettings:
+    _instance = None
+
+    def __new__(cls,  * args,  *  * kwargs):
+        if cls._instance is None:
+            cls._instance = super().__new__(cls,  * args,  *  * kwargs)
+        return cls._instance
+
+    def __init__(self):
+        self.volume = 50
+        self.difficulty = "Normal"
+
+    @staticmethod
+    def get_instance():
+        return GameSettings._instance
+
+    def change_volume(self, volume):
+        self.volume = volume
+
+    def change_difficulty(self, difficulty):
+        self.difficulty = difficulty
+
+settings1 = GameSettings.get_instance()
+settings2 = GameSettings.get_instance()
+
+print(settings1 is settings2)  # Выведет True
+
+settings1.change_volume(70)
+settings1.change_difficulty("Hard")
+
+print(settings2.volume) 
+print(settings2.difficulty)  
+Адаптер
+class DataSource:
+    def read_data(self):
+        raise NotImplementedError("Method read_data must be implemented.")
+        class FileDataSource(DataSource):
+    def __init__(self, file_path):
+        self.file_path = file_path
+
+    def read_data(self):
+        with open(self.file_path, 'r') as file:
+            return file.read()
+            class DatabaseDataSource(DataSource):
+    def __init__(self, connection_string):
+        self.connection_string = connection_string
+
+    def fetch_data(self):
+       
+        return "Database data"
+class DatabaseAdapter:
+    def __init__(self, data_source):
+        self.data_source = data_source
+
+    def read_data(self):
+        return self.data_source.fetch_data()
+        file_source = FileDataSource("data.txt")
+print(file_source.read_data())
+
+database_source = DatabaseDataSource("database_connection_string")
+database_adapter = DatabaseAdapter(database_source)
+print(database_adapter.read_data())  
+Мост
+class Device:
+    def turn_on(self):
+        raise NotImplementedError("Method turn_on must be implemented.")
+
+    def turn_off(self):
+        raise NotImplementedError("Method turn_off must be implemented.")
+
+    def set_state(self, state):
+        raise NotImplementedError("Method set_state must be implemented.")
+        class TV(Device):
+    def __init__(self, brand):
+        self.brand = brand
+
+    def turn_on(self):
+        print(f"{self.brand} TV is turned on.")
+
+    def turn_off(self):
+        print(f"{self.brand} TV is turned off.")
+
+    def set_state(self, state):
+        print(f"{self.brand} TV state changed to {state}.")
+
+class Light(Device):
+    def __init__(self, brand):
+        self.brand = brand
+
+    def turn_on(self):
+        print(f"{self.brand} light is turned on.")
+
+    def turn_off(self):
+        print(f"{self.brand} light is turned off.")
+
+    def set_state(self, state):
+        print(f"{self.brand} light brightness changed to {state}%.")
+        class RemoteControl:
+    def __init__(self, device):
+        self.device = device
+
+    def turn_on(self):
+        self.device.turn_on()
+
+    def turn_off(self):
+        self.device.turn_off()
+
+    def set_state(self, state):
+        self.device.set_state(state)
+        class SonyTV(TV):
+    def __init__(self):
+        super().__init__("Sony")
+
+class SamsungTV(TV):
+    def __init__(self):
+        super().__init__("Samsung")
+
+class PhilipsLight(Light):
+    def __init__(self):
+        super().__init__("Philips")
+
+class IKEALight(Light):
+    def __init__(self):
+        super().__init__("IKEA")
+        def main():
+    sony_tv = SonyTV()
+    samsung_tv = SamsungTV()
+    philips_light = PhilipsLight()
+    ikea_light = IKEALight()
+
+    remote_for_sony = RemoteControl(sony_tv)
+    remote_for_samsung = RemoteControl(samsung_tv)
+    remote_for_philips = RemoteControl(philips_light)
+    remote_for_ikea = RemoteControl(ikea_light)
+
+    remote_for_sony.turn_on()
+    remote_for_sony.set_state("HBO")
+    remote_for_sony.turn_off()
+
+    remote_for_samsung.turn_on()
+    remote_for_samsung.set_state("CNN")
+    remote_for_samsung.turn_off()
+
+    remote_for_philips.turn_on()
+    remote_for_philips.set_state("75%")
+    remote_for_philips.turn_off()
+
+    remote_for_ikea.turn_on()
+    remote_for_ikea.set_state("50%")
+    remote_for_ikea.turn_off()
+
+if __name__ == "__main__":
+    main()
+    Компоновщик
+    class FileSystemElement:
+    def display(self):
+        raise NotImplementedError("Method display must be implemented.")
+
+    def get_size(self):
+        raise NotImplementedError("Method get_size must be implemented.")
+        class File(FileSystemElement):
+    def __init__(self, name, size):
+        self.name = name
+        self.size = size
+
+    def display(self):
+        print(f"  - {self.name} {self.size} bytes")
+
+    def get_size(self):
+        return self.size
+
+class Directory(FileSystemElement):
+    def __init__(self, name):
+        self.name = name
+        self.files = []
+        self.subdirectories = []
+
+    def add(self, element):
+        if isinstance(element, File):
+            self.files.append(element)
+        elif isinstance(element, Directory):
+            self.subdirectories.append(element)
+
+    def display(self):
+        print(f"{self.name}")
+        for element in self.files:
+            element.display()
+        for directory in self.subdirectories:
+            directory.display()
+
+    def get_size(self):
+        size = 0
+        for file in self.files:
+            size += file.get_size()
+        return size
+def main():
+    root = Directory("root")
+    home = Directory("home")
+    user = Directory("user")
+
+    file1 = File("file1.txt", 100)
+    file2 = File("file2.txt", 200)
+    file3 = File("file3.txt", 300)
+
+    root.add(home)
+    home.add(user)
+    user.add(file1)
+    user.add(file2)
+    root.add(file3)
+
+    root.display()
+    print(f"\nTotal size: {root.get_size()} bytes")
+
+if __name__ == "__main__":
+    main()
+
+
