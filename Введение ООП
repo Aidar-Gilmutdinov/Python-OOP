@@ -1,0 +1,166 @@
+Задача 1 
+class LittleBell:
+    def sound(self):
+        print("ding")
+bell = LittleBell()
+bell.sound()
+Задача2
+class Button:
+    def __init__(self):
+        self.clicks = 0
+    def click(self):
+        self.clicks += 1
+    def click_count(self):
+        return self.clicks
+    def reset(self):
+        self.clicks = 0
+
+button = Button()
+button.click()
+button.click()
+print(button.click_count())
+button.reset()
+button.click()
+print(button.click_count())
+Задача3
+class Balance:
+    def __init__(self):
+        self.left_weight = 0
+        self.right_weight = 0
+
+    def add_left(self,weight):
+        self.left_weight += weight
+    def add_right(self,weight):
+        self.right_weight += weight
+    def result (self):
+        if self.left_weight == self.right_weight:
+            return "="
+        elif self.left_weight > self.right_weight:
+            return "L"
+        else:
+            return "R"
+balance = Balance()
+balance.add_right(10)
+balance.add_left(5)
+balance.add_left(5)
+print(balance.result())
+balance.add_left(1)
+print(balance.result())
+Задача4
+class OddEvenSeparator:
+    def __init__(self):
+        self.numbers = []
+
+    def add_number(self, number):
+        self.numbers.append(number)
+
+    def even(self):
+        return [num for num in self.numbers if num % 2 == 0]
+
+    def odd(self):
+        return [num for num in self.numbers if num % 2 != 0]
+# Ваш код
+
+separator = OddEvenSeparator()
+separator.add_number(1)
+separator.add_number(5)
+separator.add_number(6)
+separator.add_number(8)
+separator.add_number(3)
+print(' '.join(map(str, separator.even())))
+print(' '.join(map(str, separator.odd())))
+Задача5
+class BigBell:
+    def sound(self):
+        print("ding")
+        print("dong")
+        print("ding")
+        print("dong")
+# Ваш код
+
+bell = BigBell()
+bell.sound()
+bell.sound()
+bell.sound()
+
+Задача6
+import re
+from collections import Counter
+
+class MinMaxWordFinder:
+    def __init__(self):
+        self.min_word_length = float('inf')
+        self.max_word_length = 0
+        self.shortest_words = []
+        self.longest_words = []
+
+    def add_sentence(self, sentence):
+        words = re.findall(r'\b\w+\b', sentence.lower())  # Разбиваем предложение на слова
+        word_lengths = [len(word) for word in words]
+
+        # Обновляем минимальную и максимальную длину слов
+        self.min_word_length = min(self.min_word_length,  * word_lengths)
+        self.max_word_length = max(self.max_word_length,  * word_lengths)
+
+        # Добавляем слова в соответствующие списки
+        for word in words:
+            if len(word) == self.min_word_length:
+                self.shortest_words.append(word)
+            elif len(word) == self.max_word_length:
+                self.longest_words.append(word)
+
+    def shortest_words(self):
+        return sorted(self.shortest_words)
+
+    def longest_words(self):
+        return sorted(self.longest_words)
+# Ваш код
+
+finder = MinMaxWordFinder()
+finder.add_sentence('hello abc world')
+finder.add_sentence('def asdf qwert')
+print(' '.join(finder.shortest_words()))
+print(' '.join(finder.longest_words()))
+Задача7
+class BoundingRectangle:
+    def __init__(self):
+        self.points = []
+        self._update_boundaries()
+
+    def add_point(self, x, y):
+        self.points.append((x, y))
+        self._update_boundaries()
+
+    def width(self):
+        return self.right_x() - self.left_x()
+
+    def height(self):
+        return self.top_y() - self.bottom_y()
+
+    def bottom_y(self):
+        return min([point[1] for point in self.points])
+
+    def top_y(self):
+        return max([point[1] for point in self.points])
+
+    def left_x(self):
+        return min([point[0] for point in self.points])
+
+    def right_x(self):
+        return max([point[0] for point in self.points])
+
+    def _update_boundaries(self):
+        points = list(set(self.points))  # Убираем дубликаты точек
+        self.min_x = min(points, key=lambda p: p[0])[0]
+        self.max_x = max(points, key=lambda p: p[0])[0]
+        self.min_y = min(points, key=lambda p: p[1])[1]
+        self.max_y = max(points, key=lambda p: p[1])[1]
+
+# Ваш код
+
+rect = BoundingRectangle()
+rect.add_point(-1, -2)
+rect.add_point(3, 4)
+print(rect.left_x(), rect.right_x())
+print(rect.bottom_y(), rect.top_y())
+print(rect.width(), rect.height())
